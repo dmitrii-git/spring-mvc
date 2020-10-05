@@ -6,24 +6,28 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
-
 <body>
-<p th:text="#{home.welcome}">Welcome!</p>
-
 <div class="container">
+    <div th:replace="~{nav :: nav(Products)}" />
     <table class="table table-hover">
         <thead class="thead-dark">
         <tr>
-            <th style="min-width: min-content">Product id</th>
+            <th>ID</th>
             <th>Title</th>
             <th>Price</th>
             <th>Action</th>
         </tr>
+        </thead>
+        <tbody>
         <tr th:each="p : ${products}">
-            <td th:text="${p.id}"/>
-            <td th:text="${p.title}"/>
-            <td th:text="${p.price}"/>
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.title}"></td>
+            <td th:text="${p.price}"></td>
+            <td><a th:href="@{'/prod/edit/' + ${p.id}}" class="btn btn-danger">Edit</a>
+                <a th:href="@{'/cart/add/' + ${p.id}}" class="btn btn-success">Add</a>
+            </td>
         </tr>
+        </tbody>
     </table>
 </div>
 </body>
