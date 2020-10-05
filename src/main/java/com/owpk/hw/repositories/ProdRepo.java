@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+public interface ProdRepo extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
 }
