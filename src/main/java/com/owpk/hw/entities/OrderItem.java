@@ -7,10 +7,10 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "order_items")
-@NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "order_items")
+@NoArgsConstructor
 public class OrderItem {
 
   @Id
@@ -22,27 +22,18 @@ public class OrderItem {
   private Integer pricePerProduct;
 
   @ManyToOne
-  @JoinColumn(name = "product_id")
-  private Product product;
-
-  @ManyToOne
   @JoinColumn(name = "order_id")
   private Order order;
+
+  @ManyToOne
+  @JoinColumn(name = "product_id")
+  private Product product;
 
   public OrderItem(Product p) {
     this.product = p;
     this.quantity = 1;
     this.price = p.getPrice();
     this.pricePerProduct = p.getPrice();
-  }
-
-  @Override
-  public String toString() {
-    return "OrderItem{" +
-        "quantity=" + quantity +
-        ", price=" + price +
-        ", product=" + product +
-        '}';
   }
 
   public void incrementQuantity() {
@@ -54,4 +45,6 @@ public class OrderItem {
     quantity--;
     price = pricePerProduct * quantity;
   }
+
 }
+

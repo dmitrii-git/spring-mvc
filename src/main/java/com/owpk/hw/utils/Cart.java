@@ -2,79 +2,57 @@ package com.owpk.hw.utils;
 
 import com.owpk.hw.entities.OrderItem;
 import com.owpk.hw.entities.Product;
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@Data
+@Getter
 @Component
 @SessionScope
 public class Cart {
-    private List<OrderItem> container;
-    private int price;
+  private List<OrderItem> orderItemList;
+  private Integer price;
 
-    public Cart() {
-        container = new ArrayList<>();
-    }
+  @PostConstruct
+  private void init() {
+    orderItemList = new ArrayList<>();
+  }
 
-    public void addOrIncrement(Product p) {
-        for (OrderItem o : container) {
-            if (o.getProduct().getId().equals(p.getId())) {
-                o.incrementQuantity();
-                recalculate();
-                return;
-            }
-        }
-        container.add(new OrderItem(p));
+  public void addOrIncrement(Product p) {
+    for (OrderItem oi: orderItemList) {
+      if (oi.getProduct().getId().equals(p.getId())) {
+        oi.incrementQuantity();
         recalculate();
+        return;
+      }
     }
+    orderItemList.add(new OrderItem(p));
+  }
 
-    public void incrementOnly(Long productId) {
-        for (OrderItem o : container) {
-            if (o.getProduct().getId().equals(productId)) {
-                o.incrementQuantity();
-                recalculate();
-                return;
-            }
-        }
+  public void decrementOrDelete(Product p) {
+    Iterator<OrderItem> iterator = orderItemList.listIterator();
+    while (iterator.hasNext()) {
+      OrderItem next = iterator.next();
+      if (next.getId().equals(p.getId()))
+        next.decrementQuantity();
+      if (next.getQuantity() == 0) {
+        iterator.remove();
+        recalculate();
+        return;
+      }
     }
+  }
 
-    public void decrementOrRemove(Long productId) {
-        Iterator<OrderItem> iter = container.iterator();
-        while (iter.hasNext()) {
-            OrderItem o = iter.next();
-            if (o.getProduct().getId().equals(productId)) {
-                o.decrementQuantity();
-                if (o.getQuantity() == 0) {
-                    iter.remove();
-                }
-                recalculate();
-                return;
-            }
-        }
+  private void recalculate() {
+    price = 0;
+    for (OrderItem oi: orderItemList) {
+      price += oi.getPrice();
     }
-
-    public void remove(Long productId) {
-        Iterator<OrderItem> iter = container.iterator();
-        while (iter.hasNext()) {
-            OrderItem o = iter.next();
-            if (o.getProduct().getId().equals(productId)) {
-                iter.remove();
-                recalculate();
-                return;
-            }
-        }
-    }
-
-    public void recalculate() {
-        price = 0;
-        for (OrderItem o : container) {
-            price += o.getPrice();
-        }
-    }
+  }
 
 }

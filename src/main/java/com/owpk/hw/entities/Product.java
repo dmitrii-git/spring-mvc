@@ -10,8 +10,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "products")
+@NoArgsConstructor
 public class Product {
 
   @Id
@@ -21,13 +21,6 @@ public class Product {
   private Integer price;
 
   @OneToMany(mappedBy = "product")
-  List<OrderItem> orderItem;
+  private List<OrderItem> orderItemList;
 
-  @Override
-  public String toString() {
-    return "Product{" + "ID" + id +
-        "title='" + title + '\'' +
-        ", price=" + price +
-        '}';
-  }
 }

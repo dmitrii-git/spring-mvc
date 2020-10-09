@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProdRepo extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-
 }

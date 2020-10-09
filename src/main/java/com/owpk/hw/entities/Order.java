@@ -8,37 +8,20 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
-@NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "orders")
+@NoArgsConstructor
 public class Order {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Integer price;
 
   @OneToMany(mappedBy = "order")
   private List<OrderItem> items;
 
   @ManyToOne
-  @JoinColumn(name = "customer_id")
   private Customer customer;
 
-  public Order(Integer price, List<OrderItem> items, Customer customer) {
-    this.price = price;
-    this.items = items;
-    this.customer = customer;
-  }
-
-  @Override
-  public String toString() {
-    return "Order{" +
-        "id=" + id +
-        ", price=" + price +
-        ", items=" + items +
-        ", customer=" + customer +
-        '}';
-  }
 }
