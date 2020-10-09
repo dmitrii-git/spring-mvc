@@ -33,13 +33,4 @@ insert into customers (name) values
 
 insert into products (title, price) values
 ('Bred1', 100),
-('Bred2', 200),
-('Bred3', 300),
-('Bred4', 400),
-('Bred5', 500),
-('Bred6', 600),
-('Bred7', 700),
-('Bred8', 800),
-('Bred9', 900),
-('Bred10', 1000),
-('Bred11', 1100);
+('Bred2', 200);

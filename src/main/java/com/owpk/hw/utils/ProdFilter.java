@@ -1,42 +1,39 @@
 package com.owpk.hw.utils;
 
 import com.owpk.hw.entities.Product;
-import com.owpk.hw.repositories.specifications.ProdSpec;
+import com.owpk.hw.repositories.specification.ProdSpec;
+import lombok.Getter;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Map;
 
+@Getter
 public class ProdFilter {
-
+  private Specification<Product> spec;
   private String attributes;
 
-  private Specification<Product> productSpecification;
+  private Specification<Product> creatSpecAndAttributes(Map<String, String> params) {
+    spec = Specification.where(null);
+    StringBuilder filterDefinitionBuilder = new StringBuilder();
 
-  public String getAttributes(){
-    return attributes;
-  }
-
-  public Specification<Product> getSpecAndCreateAttributeDefinition(Map<String, String> params) {
-    final StringBuilder sb = new StringBuilder();
-    productSpecification = Specification.where(null);
-    sb.append("?");
-    if (params.containsKey("min_price") && !params.get("min_price").trim().isEmpty()) {
-      int val = Integer.parseInt(params.get("min_price"));
-      productSpecification = productSpecification.and(ProdSpec.priceGreaterOrEqual(val));
-      sb.append("&min_price=").append(val);
+    String filterTitle = params.get("title");
+    if (filterTitle != null && !filterTitle.isBlank()) {
+      spec = spec.and(ProdSpec.getProdByTitlePart(filterTitle));
+      filterDefinitionBuilder.append("&title=").append(filterTitle);
     }
 
-    if (params.containsKey("max_price") && !params.get("max_price").trim().isEmpty()) {
-      int val = Integer.parseInt(params.get("max_price"));
-      productSpecification = productSpecification.and(ProdSpec.priceLessOrEqual(val));
-      sb.append("&max_price=").append(val);
+    if (params.containsKey("min_price") && !params.get("min_price").isBlank()) {
+      Integer minPrice = Integer.parseInt(params.get("min_price"));
+      spec = spec.and(ProdSpec.getProdByMinPrice(minPrice));
+      filterDefinitionBuilder.append("&min_price=").append(minPrice);
     }
 
-    if (params.containsKey("title") && !params.get("title").trim().isEmpty()) {
-      String val = params.get("title");
-      productSpecification = productSpecification.and(ProdSpec.titleLike(val));
-      sb.append("&title=").append(val);
+    if (params.containsKey("max_price") && !params.get("max_price").isBlank()) {
+      Integer maxPrice = Integer.parseInt(params.get("max_price"));
+      spec = spec.and(ProdSpec.getProdByMaxPrice(maxPrice));
+      filterDefinitionBuilder.append("&max_price=").append(maxPrice);
     }
-    return productSpecification;
+    attributes = filterDefinitionBuilder.toString();
+    return spec;
   }
 }
